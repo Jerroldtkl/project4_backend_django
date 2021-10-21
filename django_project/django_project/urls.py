@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('user/', include('user_information.urls')),
     path('product/', include('product_information.urls')),
-    path('user/usercart/', include('usercarts.urls')),
+    path('user/usercart/', include('usercart.urls')),
     path('user/purchase-history/', include('purchase_history.urls')),
     path('django_project_jwt/', include('django_project_jwt.urls')),
     path('admin/', admin.site.urls),

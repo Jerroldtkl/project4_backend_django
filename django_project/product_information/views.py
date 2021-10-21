@@ -40,12 +40,9 @@ class SucculentCreate(APIView):
 class SucculentUpdate(APIView):
     # permission_classes = (IsAuthenticated,)
 
-    def post(self, request, pk):
-        tasks = Succulents.objects.get(id=pk)
-        serializer = SucculentsSerializer(instance=tasks, data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
+    def post(self, request, id):
+        tasks = Succulents.objects.get(pk=id)
+        serializer = SucculentsSerializer(tasks)
 
         return Response(serializer.data)
 

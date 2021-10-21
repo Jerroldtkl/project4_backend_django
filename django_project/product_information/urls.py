@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     path('succulents-details/', views.SucculentDetails.as_view(), name='succulents-details'),
     path('succulents-create/', views.SucculentCreate.as_view(), name='succulents-create'),
-    path('succulents-update/<str:pk>/', views.SucculentUpdate.as_view(), name='succulents-update'),
+    path('succulents-update/<int:id>/', views.SucculentUpdate.as_view(), name='succulents-update'),
     path('succulents-delete/<str:pk>/', views.SucculentDelete.as_view(), name='succulents-delete'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

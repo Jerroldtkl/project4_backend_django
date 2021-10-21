@@ -1,10 +1,11 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import ProfileSerializer
+from .serializers import ProfileSerializer, RegisterSerializer
 from django.contrib.auth.models import User
 from .models import Profile
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework import status
 
 
 class JWTDetails(APIView):
@@ -24,19 +25,20 @@ class JWTDetails(APIView):
             return Response(token.payload)
 
 
-class ProfileCreate(APIView):
-    # permission_classes = (IsAuthenticated,)
+class UserCreate(APIView):
+    permission_classes = (AllowAny,)
 
     def post(self, request):
-        serializer = ProfileSerializer(data=request.data)
-
+        # print('data:', request.data)
+        serializer = RegisterSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             serializer.save()
 
             return Response(serializer.data)
 
         else:
-            return Response('Invalid Creation')
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileList(APIView):
@@ -44,17 +46,17 @@ class ProfileList(APIView):
 
     def get(self, request):
         tasks = User.objects.all()
-        serializer = ProfileSerializer(tasks, many=True)
+        serializer = RegisterSerializer(tasks, many=True)
 
         return Response(serializer.data)
 
 
 class ProfileDetails(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
-    def get(self, request, user_id):
-        tasks = Profile.objects.all(pk=user_id)
-        serializer = ProfileSerializer(tasks, many=True)
+    def get(self, request, id):
+        tasks = User.objects.get(pk=id)
+        serializer = RegisterSerializer(tasks)
 
         return Response(serializer.data)
 
@@ -64,7 +66,7 @@ class ProfileUpdate(APIView):
 
     def update_profile(self, request, user_id):
         tasks = Profile.objects.get(pk=user_id)
-        serializer = ProfileSerializer(instance=tasks, data=request.data)
+        serializer = RegisterSerializer(instance=tasks, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
